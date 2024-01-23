@@ -1,0 +1,65 @@
+[gd_scene load_steps=12 format=3 uid="uid://byt60kei5qnau"]
+
+[ext_resource type="Script" path="res://scenes/bird.gd" id="1_1nf20"]
+[ext_resource type="Texture2D" uid="uid://c00rw32bl4rf7" path="res://assets/Game Objects/yellowbird-downflap.png" id="1_qqc5p"]
+[ext_resource type="Texture2D" uid="uid://k3splu3m0p7c" path="res://assets/Game Objects/yellowbird-midflap.png" id="2_b5283"]
+[ext_resource type="Texture2D" uid="uid://ca5wxivp7rgc5" path="res://assets/Game Objects/yellowbird-upflap.png" id="3_pi07l"]
+[ext_resource type="AudioStream" uid="uid://8gds23y7ghe8" path="res://assets/Sound Efects/wing.ogg" id="5_bbn5r"]
+[ext_resource type="AudioStream" uid="uid://bq34sj635348s" path="res://assets/Sound Efects/swoosh.ogg" id="6_08co7"]
+[ext_resource type="AudioStream" uid="uid://c5jwdwdlg112p" path="res://assets/Sound Efects/point.ogg" id="7_jsipb"]
+[ext_resource type="AudioStream" uid="uid://d0sfk6rsdbqxv" path="res://assets/Sound Efects/hit.ogg" id="8_c02bp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g3x0b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qqc5p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_b5283")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_pi07l")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jcmav"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vn2i0"]
+
+[node name="Bird" type="RigidBody2D" groups=["player"]]
+collision_mask = 14
+script = ExtResource("1_1nf20")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_g3x0b")
+animation = &"fly"
+autoplay = "fly"
+frame_progress = 0.139341
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jcmav")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_vn2i0")
+
+[node name="wing" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_bbn5r")
+
+[node name="smoosh" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_08co7")
+
+[node name="point" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_jsipb")
+
+[node name="hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_c02bp")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

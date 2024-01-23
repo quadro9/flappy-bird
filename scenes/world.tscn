@@ -1,0 +1,117 @@
+[gd_scene load_steps=10 format=3 uid="uid://pmwd5fueb1sr"]
+
+[ext_resource type="Script" path="res://scenes/world.gd" id="1_cbl0g"]
+[ext_resource type="Texture2D" uid="uid://ddrux6vv1omy3" path="res://assets/Game Objects/background-day.png" id="1_o2okl"]
+[ext_resource type="Texture2D" uid="uid://db1a0v5hmdpa6" path="res://assets/Game Objects/base.png" id="3_te58u"]
+[ext_resource type="Texture2D" uid="uid://cksdc7gvq3yk3" path="res://assets/UI/gameover.png" id="5_7v6y5"]
+[ext_resource type="PackedScene" uid="uid://csnjf0ax7eauf" path="res://scenes/score.tscn" id="6_g1078"]
+[ext_resource type="Texture2D" uid="uid://sjos6b40kxpn" path="res://assets/UI/message.png" id="6_r027m"]
+[ext_resource type="AudioStream" uid="uid://vrqtilir4ve3" path="res://assets/Sound Efects/die.ogg" id="7_1sn4i"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ta2sc"]
+size = Vector2(315, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e2p3q"]
+size = Vector2(312, 110)
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_cbl0g")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="BackLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(282, 0)
+
+[node name="Background-day" type="Sprite2D" parent="ParallaxBackground/BackLayer"]
+texture = ExtResource("1_o2okl")
+centered = false
+
+[node name="PipesLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="GroundLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(336, 0)
+
+[node name="Base" type="Sprite2D" parent="ParallaxBackground/GroundLayer"]
+z_index = 10
+position = Vector2(150, 456)
+texture = ExtResource("3_te58u")
+
+[node name="Sky" type="StaticBody2D" parent="." groups=["good"]]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sky"]
+position = Vector2(147.5, -39)
+shape = SubResource("RectangleShape2D_ta2sc")
+
+[node name="Ground" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(137, 457)
+shape = SubResource("RectangleShape2D_e2p3q")
+
+[node name="BirdMarker" type="Marker2D" parent="."]
+position = Vector2(144, 233)
+
+[node name="PipeMarker" type="Marker2D" parent="."]
+position = Vector2(340, 188)
+
+[node name="NewGameTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="NewPipeTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameOver" type="TextureRect" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -21.0
+offset_right = 96.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_7v6y5")
+
+[node name="StartGame" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.0
+offset_top = -205.5
+offset_right = 92.0
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_r027m")
+
+[node name="Score" parent="CanvasLayer" instance=ExtResource("6_g1078")]
+offset_left = 18.0
+offset_top = 20.0
+offset_right = 18.0
+offset_bottom = 20.0
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer"]
+offset_left = 6.0
+offset_top = 424.0
+offset_right = 281.0
+offset_bottom = 503.0
+
+[node name="Record" parent="CanvasLayer/CenterContainer" instance=ExtResource("6_g1078")]
+layout_mode = 2
+
+[node name="die" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_1sn4i")
+
+[connection signal="timeout" from="NewGameTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="NewPipeTimer" to="." method="_on_new_pipe_timer_timeout"]

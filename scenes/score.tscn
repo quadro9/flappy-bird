@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://csnjf0ax7eauf"]
+
+[ext_resource type="Script" path="res://scenes/score.gd" id="1_cup10"]
+
+[node name="Score" type="HBoxContainer"]
+script = ExtResource("1_cup10")
